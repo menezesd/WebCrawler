@@ -1,3 +1,5 @@
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -60,7 +62,7 @@ public class WebCrawler extends Crawler {
 			return new LinkedList();
 		urlsReached.add(url);
 		currentURL = url;
-		currentContext = new URL(url);
+		currentContext = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 		urlsToParse = new LinkedList();
 		try { super.parse(url); }
 		catch (IOException e) { /* File does not exist; do nothing */ }
@@ -91,9 +93,9 @@ public class WebCrawler extends Crawler {
 			if (attr != null)
 				try {
 					if (attr instanceof String)
-						urlsToParse.add(new URL(currentContext, (String) attr));
+						urlsToParse.add(Urls.create(currentContext, (String) attr, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
 					else if (attr instanceof URL)
-						urlsToParse.add(new URL(currentContext, ((URL) attr).toString()));
+						urlsToParse.add(Urls.create(currentContext, ((URL) attr).toString(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
 				} catch(MalformedURLException e) {
 					// do nothing
 				}

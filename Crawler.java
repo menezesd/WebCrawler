@@ -1,3 +1,5 @@
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -26,7 +28,7 @@ public abstract class Crawler extends HTMLEditorKit.ParserCallback {
 		System.out.println("STARTED PARSING " + url + " ...");
 		Reader in = null;
 		try {
-			in = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
+			in = new BufferedReader(new InputStreamReader(Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).openStream()));
 			parser.parse(in, this, true);
 			flush();
 		} finally {
